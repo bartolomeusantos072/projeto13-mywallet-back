@@ -12,22 +12,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const port = process.env.PORT || 5000;
 
-const mongoClient = new MongoClient(process.env.MONGO_URI);
-let db;
-const promise = mongoClient.connect();
-promise
-  .then(() => {
-    db = mongoClient.db(process.env.DATABASE);
-  })
-  .catch((e) => {
-    console.log(chalk.red.bold("Falha ao conectar no banco"));
-  });
-
+  
 app.post("/sign-up", async (req, res) => {
-    const user = req.body;
-    const { name, email, password, password_confirmation }=user;
+  const user = req.body;
+  const { name, email, password, password_confirmation }=user;
   
     const passwordHash = bcrypt.hashSync(user.password, 10);
     
@@ -36,8 +25,8 @@ app.post("/sign-up", async (req, res) => {
       email: Joi.string().email().required(),
       password: Joi.string().min(3).max(15).required(),
       password_confirmation: Joi.any()
-        .valid(Joi.ref("password"))
-        .required()
+      .valid(Joi.ref("password"))
+      .required()
     });
     
     const { error } = userSchema.validate(user);
@@ -67,16 +56,16 @@ app.post("/sign-in", async (req, res) => {
   if (error) {
     return res.status(422).send(error.details.map(detail => detail.message));
   }
-
+  
   try {
     const user = await db.collection('users').findOne({ email });
     console.log(user);
     if (user && bcrypt.compareSync(password, user.password)) {
       
       const token = uuid();
-  
+      
       await db.collection('sessions').insertOne({ token, userId: user._id });
-  
+      
       res.send(token);
     } else {
       res.sendStatus(401);
@@ -92,11 +81,11 @@ app.get("/meus-dados",async (req,res)=>{
   const {authorization}=req.headers;
   console.log(authorization);
   const token=authorization?.replace('Bearer ','');
-
+  
   if(!token){
     return res.sendStatus(401)
   }
-
+  
   const session = await db.collection('sessions').findOne({token});
   if(!session){
     return res.sendStatus(401);
@@ -105,11 +94,12 @@ app.get("/meus-dados",async (req,res)=>{
   if(!user){
     return res.sendStatus(401);
   }
-
+  
   delete user.password;
   res.send(user);
 });
 
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(chalk.green.bold("Servidor Conectado na porta ", port));
 });
