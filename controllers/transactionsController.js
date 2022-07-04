@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 
 import db from "../dbStrategy/DbMongo.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 import transactionSchema from "../schemas/transactionSchema.js";
 

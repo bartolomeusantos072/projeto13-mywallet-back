@@ -1,13 +1,14 @@
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
+
 import db from "../dbStrategy/DbMongo.js";
 
 export async function signUp(req, res) {
   
   try {
-    const list = await db.collection("users").findOne({ email:req.body.email });
-    if (list) {
+    const email = await db.collection("users").findOne({ email:req.body.email });
+    if (email) {
       return res.status(409).send("Try again ivalid register");
     } else {
       const passwordHash = bcrypt.hashSync(req.body.password, 10);
@@ -29,7 +30,10 @@ export async function signIn(req, res) {
     const user = await db
       .collection("users")
       .findOne({ email: req.body.email });
-    if (!user) return res.sendStatus(404);
+    if (!user){
+      alert("Email or password Invalid! Try again!")
+      return res.sendStatus(404);
+    } 
 
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
       const token = uuid();

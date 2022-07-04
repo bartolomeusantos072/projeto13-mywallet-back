@@ -1,5 +1,6 @@
 import db from "../dbStrategy/DbMongo.js";
 
+
 export async function getUser(req, res, next) {
   const { authorization } = req.headers;
   const token = authorization?.replace("Bearer", "").trim();
