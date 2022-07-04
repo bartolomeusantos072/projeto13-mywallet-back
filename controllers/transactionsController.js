@@ -5,6 +5,7 @@ import db from "../dbStrategy/DbMongo.js";
 import transactionSchema from "../schemas/transactionSchema.js";
 
 export async function getTransactions(req, res) {
+ 
   const {user} = res.locals;
   try {
     const transactions = await db.collection("transactions").find({userId: user._id}).toArray();
