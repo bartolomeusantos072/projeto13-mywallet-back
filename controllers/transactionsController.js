@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import db from "../dbStrategy/DbMongo";
+import db from "../dbStrategy/DbMongo.js";
 
 import transactionSchema from "../schemas/transactionSchema.js";
 

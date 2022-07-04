@@ -1,8 +1,7 @@
-import joi from "joi";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
-import db from "./../dbStrategy/DbMongo";
+import db from '../dbStrategy/DbMongo.js';
 
 export async function signUp(req, res) {
   try {
